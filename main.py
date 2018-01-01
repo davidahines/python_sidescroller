@@ -169,9 +169,11 @@ class Hero(pygame.sprite.Sprite):
             if self.velocity[1] == 0:
                 self.velocity[1] = GRAVITY * dt
             else:
-                print("increasing downward velocity: {}".format(self.velocity[1]))
+                if game.debug:
+                    print("increasing downward velocity: {}".format(self.velocity[1]))
                 self.velocity[1] += GRAVITY * dt
-                print("is now: {}".format(self.velocity[1]))
+                if game.debug:
+                    print("is now: {}".format(self.velocity[1]))
 
     def animate(self, dt, game):
         if(self.state == self.STATE_WALKING):
@@ -180,26 +182,31 @@ class Hero(pygame.sprite.Sprite):
             self.image = self.walk_images[self.current_walking_frame]
             self.time_in_state += dt
 
-            print("Walking frame: {}".format(self.current_walking_frame))
+            if game.debug:
+                print("Walking frame: {}".format(self.current_walking_frame))
         elif(self.state == self.STATE_STANDING):
             #if self.time_in_state > self.FRAME_DELAY_STANDING:
             self.current_standing_frame  = int(self.time_in_state * self.MILLISECONDS_TO_SECONDS % len(self.standing_images))
             self.image = self.standing_images[self.current_standing_frame]
             self.time_in_state += dt
-            print("time_standing: {}".format(self.time_in_state))
-            print("len(walk_images){}".format(len(self.walk_images)))
-            print("Standing frame: {}".format(self.current_standing_frame))
+            if game.debug:
+                print("time_standing: {}".format(self.time_in_state))
+                print("len(walk_images){}".format(len(self.walk_images)))
+                print("Standing frame: {}".format(self.current_standing_frame))
         elif(self.state == self.STATE_JUMPING):
             #if self.time_in_state > self.FRAME_DELAY_STANDING:
             self.current_jump_frame = int(self.time_in_state * self.MILLISECONDS_TO_SECONDS % len(self.jumping_images))
             self.image = self.jumping_images[self.current_jump_frame]
             self.time_in_state += dt
-            print("time_standing: {}".format(self.time_in_state))
-            print("len(jump_images){}".format(len(self.jumping_images)))
-            print("Jumping")
+            if game.debug:
+                print("time_standing: {}".format(self.time_in_state))
+                print("len(jump_images){}".format(len(self.jumping_images)))
+                print("Jumping")
         else:
-            print("state is {}".format(self.state))
-        print("delta_time: {}".format(dt))
+            if game.debug:
+                print("state is {}".format(self.state))
+        if game.debug:
+            print("delta_time: {}".format(dt))
 
         if self.facing == self.FACING_LEFT:
             self.image = pygame.transform.flip(self.image,True,False)
@@ -350,7 +357,7 @@ class QuestGame(object):
         # layers begin with 0, so the layers are 0, 1, and 2.
         # since we want the sprite to be on top of layer 1, we set the default
         # layer for sprites as 2
-        self.group = PyscrollGroup(map_layer=self.map_layer, default_layer=2)
+        self.group = PyscrollGroup(map_layer=self.map_layer, default_layer=3)
 
 
         # add our hero to the group
