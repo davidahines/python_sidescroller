@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cfb53274-1d52-4388-b241-26f986ef0391" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/data/art/dungeonSprites.png" afterPath="$PROJECT_DIR$/data/art/dungeonSprites.png" />
-      <change beforePath="$PROJECT_DIR$/data/maps/dungeon_0.tmx" afterPath="$PROJECT_DIR$/data/maps/dungeon_0.tmx" />
       <change beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,8 +17,10 @@
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="209">
-              <caret line="90" column="33" lean-forward="false" selection-start-line="90" selection-start-column="33" selection-end-line="90" selection-end-column="33" />
-              <folding />
+              <caret line="517" column="50" lean-forward="false" selection-start-line="517" selection-start-column="50" selection-end-line="517" selection-end-column="50" />
+              <folding>
+                <element signature="e#166#180#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -46,36 +46,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>images_</find>
-      <find>snap</find>
-      <find>clim</find>
-      <find>animate</find>
-      <find>self.jumping_images</find>
-      <find>update</find>
-      <find>draw</find>
-      <find>debug</find>
-      <find>debu</find>
-      <find>collisions</find>
-      <find>ANIMATION_TIM</find>
-      <find>stairs</find>
-      <find>move</find>
-      <find>if</find>
-      <find>handl</find>
-      <find>Standing frame</find>
-      <find>climbing</find>
-      <find>climbing_images</find>
-      <find>STATE</find>
-      <find>hand</find>
-      <find>snap_to_stair</find>
       <find>STATE_CL</find>
       <find>self.deb</find>
-      <find>zoom</find>
       <find>self.hero.clim</find>
       <find>self.hero.</find>
       <find>self.cl</find>
       <find>HERO_MOVE_SPEE</find>
       <find>calc_</find>
+      <find>time_spent_climbing</find>
       <find>CLIMBING_SPEED</find>
+      <find>RATE</find>
+      <find>MAth.</find>
+      <find>Math.</find>
+      <find>import</find>
+      <find>position</find>
+      <find>positions_To</find>
+      <find>CLIMBING</find>
+      <find>state_on</find>
+      <find>GRAVITY</find>
+      <find>zoom</find>
+      <find>draw_</find>
+      <find>debug =</find>
+      <find>snap_to_stair</find>
+      <find>debug</find>
+      <find>animate</find>
+      <find>handle_input</find>
+      <find>positions_</find>
+      <find>set_state</find>
+      <find>self</find>
+      <find>snap_t</find>
+      <find>dete</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -253,8 +253,10 @@
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
-          <caret line="90" column="33" lean-forward="false" selection-start-line="90" selection-start-column="33" selection-end-line="90" selection-end-column="33" />
-          <folding />
+          <caret line="517" column="50" lean-forward="false" selection-start-line="517" selection-start-column="50" selection-end-line="517" selection-end-column="50" />
+          <folding>
+            <element signature="e#166#180#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

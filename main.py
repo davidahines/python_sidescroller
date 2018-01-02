@@ -11,6 +11,7 @@ pip install pytmx
 import os.path
 
 import pygame
+import math
 from pygame.locals import *
 from pytmx.util_pygame import load_pygame
 
@@ -88,6 +89,7 @@ class Hero(pygame.sprite.Sprite):
         self.JUMP_DELAY =.3
 
         self.CLIMBING_DELAY = .3
+        self.CLIMBING_RATE = 1
         self.CLIMBING_SPEED = 200
 
         self.CLIMBING_UP = 0
@@ -123,12 +125,24 @@ class Hero(pygame.sprite.Sprite):
 
     def snap_to_stair(self, dt, game):
         stair_sensor = self.get_stair_sensor()
+        found_stair = False
         for stair in game.stairs:
             if stair_sensor.colliderect(stair.rect):
                 self.rect.bottom = stair.rect.top
                 self.set_state(self.STATE_ON_STAIRS)
                 self._position[1] = self.rect.top
+                found_stair = True
                 break
+
+    def detects_stairs(self, game):
+        stair_sensor = self.get_stair_sensor()
+        found_stair = False
+        for stair in game.stairs:
+            if stair_sensor.colliderect(stair.rect):
+                found_stair = True
+                break
+        return found_stair
+
 
     def load_sprites(self):
         self.spritesheet = Spritesheet('data/art/platformer_template_g.png')
@@ -219,7 +233,7 @@ class Hero(pygame.sprite.Sprite):
 
         if hero_is_airborne:
             if self.velocity[1] == 0:
-                self.velocity[1] = GRAVITY * dt
+                self.velocity[1] = self.GRAVITY * dt
             else:
                 if game.debug:
                     print("increasing downward velocity: {}".format(self.velocity[1]))
@@ -253,7 +267,7 @@ class Hero(pygame.sprite.Sprite):
                 print("Jumping")
         elif self.state == self.STATE_ON_STAIRS:
             if self.velocity[1] > 0:
-                self.current_desc_frame = int(self.time_spent_climbing * self.MILLISECONDS_TO_SECONDS % len(self.stairs_descending_images))
+                self.current_desc_frame = int(self.time_spent_climbing * self.MILLISECONDS_TO_SECONDS / 10   % len(self.stairs_descending_images))
 
                 self.image = self.stairs_descending_images[self.current_desc_frame]
                 self.time_in_state += dt
@@ -292,12 +306,15 @@ class Hero(pygame.sprite.Sprite):
         # Move each axis separately. Note that this checks for collisions both times.
         if self.state == self.STATE_ON_STAIRS:
             if self.time_in_state > self.CLIMBING_DELAY:
-                if self.time_spent_climbing > self.CLIMBING_SPEED / 2:
-                    positions_to_move = Math.floor(self.time_spent_climbing / self.CLIMBING_SPEED)
-                    self.time_spent_climbing = self.time_spent_climbing % self.CLIMBING_SPEED
-                    self._position[0] += dt * self.CLIMBING_SPEED * positions_to_move
-                    self._position[1] += dt * self.velocity[1] * positions_to_move
-                    print("positions_to_move: ".format(self.positions_to_move))
+                if self.time_spent_climbing >= self.CLIMBING_RATE:
+                    print("advances on stairs")
+                    positions_to_move = math.floor(self.time_spent_climbing / self.CLIMBING_RATE)
+                    self.time_spent_climbing = self.time_spent_climbing % self.CLIMBING_RATE
+                    self._position[0] += dt * positions_to_move * self.velocity[0]
+                    self._position[1] += dt * positions_to_move * self.velocity[1]
+                    print("positions_to_move: {}".format(positions_to_move))
+                else:
+                    self.time_spent_climbing += dt
         else:
             dx = self.velocity[0]
             dy = self.velocity[1]
@@ -427,6 +444,8 @@ class QuestGame(object):
         # create new renderer (camera)
         self.map_layer = pyscroll.BufferedRenderer(map_data, screen.get_size(), clamp_camera=True, tall_sprites=1)
         self.map_layer.zoom = 2
+        if(self.debug):
+            self.map_layer.zoom = 1
 
         # pyscroll supports layered rendering.  our map has 3 'under' layers
         # layers begin with 0, so the layers are 0, 1, and 2.
@@ -496,7 +515,8 @@ class QuestGame(object):
         hero_touches_ceiling = ceiling_collidelist != -1
 
 
-
+        if  self.hero.detects_stairs(self) != True and self.hero.state == self.hero.STATE_ON_STAIRS:
+            self.hero.state = self.hero.STATE_STANDING
 
         if pressed[K_l]:
             print("airborne: {}".format(hero_is_airborne))
@@ -504,18 +524,20 @@ class QuestGame(object):
             print("hero_touches_ceiling: {}".format(hero_touches_ceiling))
             print("hero_is_airborne: {}".format(hero_is_airborne))
             print("hero_state: {}".format(self.hero.state))
+        # Ascend Stairs
         if pressed[K_UP] and not pressed[K_DOWN]:
             if self.hero.state == self.hero.STATE_ON_STAIRS:
-                if self.hero.FACING_RIGHT:
+                if self.hero.facing == self.hero.FACING_RIGHT:
                     self.hero.velocity[0] = self.hero.CLIMBING_SPEED
                 else:
                     self.hero.velocity[0] = -self.hero.CLIMBING_SPEED
                 self.hero.velocity[1] = -self.hero.CLIMBING_SPEED
             else:
                 self.hero.snap_to_stair(dt, self)
+        # Descend stairs
         if pressed[K_DOWN] and not pressed[K_UP]:
             if self.hero.state == self.hero.STATE_ON_STAIRS:
-                if self.hero.FACING_RIGHT:
+                if self.hero.facing == self.hero.FACING_RIGHT:
                     self.hero.velocity[0] = self.hero.CLIMBING_SPEED
                 else:
                     self.hero.velocity[0] = -self.hero.CLIMBING_SPEED
